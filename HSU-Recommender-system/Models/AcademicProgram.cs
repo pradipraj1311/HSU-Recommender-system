@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using HSU_Recommender_system.Models;
+using HSU_Recommender_system.Data;
 
 
-namespace HSU_recommneder_system.Models
+namespace HSU_Recommender_system.Models
 {
     public class AcademicProgram
     {

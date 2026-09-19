@@ -1,10 +1,10 @@
 ﻿
 using HSU_Recommender_system.Models;
-using HSU_recommneder_system.Models;
+using  HSU_Recommender_system.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HSU_recommneder_system.Data
+namespace HSU_Recommender_system.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

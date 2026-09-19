@@ -1,4 +1,4 @@
-﻿using HSU_recommneder_system.Models;
+﻿using HSU_Recommender_system    .Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace HSU_Recommender_system.Models

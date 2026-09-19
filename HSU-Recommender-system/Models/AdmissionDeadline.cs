@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HSU_recommneder_system.Models
+namespace HSU_Recommender_system.Models
 {
     public class AdmissionDeadline
     {
