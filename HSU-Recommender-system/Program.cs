@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+using HSU_Recommender_system.Models;
+using HSU_Recommender_system.Data;
+using  HSU_Recommender_system.Models;
 using Microsoft.AspNetCore.Identity;
-using HSU_recommneder_system.Data;
-using HSU_recommneder_system.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -12,18 +12,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.SignIn.RequireConfirmedAccount = false;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultUI()
 .AddDefaultTokenProviders();
 
-
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
 
 if (!app.Environment.IsDevelopment())
 {
@@ -33,7 +33,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -45,6 +44,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapRazorPages();
+
 app.Run();
-
-
