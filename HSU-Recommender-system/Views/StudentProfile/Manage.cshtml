@@ -1,0 +1,92 @@
+@model HSU_Recommender_system.Models.StudentProfile
+
+@{
+    ViewData["Title"] = "Manage Academic Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-white" style="background-color: #6f42c1;">
+                    <h5 class="mb-0">Academic & Financial Profile Parameters</h5>
+                </div>
+                <div class="card-body bg-light">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Manage" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CGPA" class="form-label fw-bold"></label>
+                                <input asp-for="CGPA" class="form-control" type="number" step="0.01" placeholder="e.g. 8.5" />
+                                <span asp-validation-for="CGPA" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EnglishProficiencyScore" class="form-label fw-bold"></label>
+                                <input asp-for="EnglishProficiencyScore" class="form-control" type="number" step="0.5" placeholder="e.g. 7.5" />
+                                <span asp-validation-for="EnglishProficiencyScore" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NumberOfProjects" class="form-label fw-bold"></label>
+                                <input asp-for="NumberOfProjects" class="form-control" />
+                                <span asp-validation-for="NumberOfProjects" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NumberOfResearchPapers" class="form-label fw-bold"></label>
+                                <input asp-for="NumberOfResearchPapers" class="form-control" />
+                                <span asp-validation-for="NumberOfResearchPapers" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MaximumBudget" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input asp-for="MaximumBudget" class="form-control" type="number" placeholder="e.g. 45000" />
+                                </div>
+                                <span asp-validation-for="MaximumBudget" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="WorkExperienceMonths" class="form-label fw-bold"></label>
+                                <input asp-for="WorkExperienceMonths" class="form-control" placeholder="e.g. 6" />
+                                <span asp-validation-for="WorkExperienceMonths" class="text-danger"></span>
+                            </div>
+
+                            <!-- Dynamic Dropdowns -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TargetDegree" class="form-label fw-bold"></label>
+                                <select asp-for="TargetDegree" class="form-select" asp-items="ViewBag.Degrees">
+                                    <option value="">-- Select Target Degree --</option>
+                                </select>
+                                <span asp-validation-for="TargetDegree" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PreferredCountry" class="form-label fw-bold"></label>
+                                <select asp-for="PreferredCountry" class="form-select" asp-items="ViewBag.Countries">
+                                    <option value="">-- Select Country --</option>
+                                </select>
+                                <span asp-validation-for="PreferredCountry" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn text-white fw-bold py-2" style="background-color: #6f42c1;">Save Profile Parameters</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
