@@ -1,6 +1,5 @@
 ﻿
 using HSU_Recommender_system.Models;
-using  HSU_Recommender_system.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
