@@ -2,6 +2,7 @@ using HSU_Recommender_system.Models;
 using HSU_Recommender_system.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using HSU_Recommender_system.Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+
+
 
 app.MapRazorPages();
 
