@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <RootNamespace>HSU_Recommender_system</RootNamespace>
 	  <AssemblyName>HSU_Recommender_system</AssemblyName>
+	  <UserSecretsId>108b8c3e-76bb-4c1e-bc80-dfce3fb94295</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
