@@ -1,0 +1,95 @@
+@model IEnumerable<HSU_Recommender_system.Models.AcademicProgram>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UniversityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.University)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DegreeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalTuitionFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinCGPA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinIELTS)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HistoricalRAChance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HistoricalTAChance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResearchKeywords)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Deadlines)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.UniversityId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.University)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DegreeName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.TotalTuitionFee)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.MinCGPA)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.MinIELTS)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.HistoricalRAChance)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.HistoricalTAChance)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.ResearchKeywords)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Deadlines)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
