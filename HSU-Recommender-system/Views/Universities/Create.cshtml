@@ -1,0 +1,69 @@
+@model HSU_Recommender_system.Models.University
+
+@{
+    ViewData["Title"] = "Create University";
+}
+
+<h2 class="text-purple fw-bold mb-4" style="color: #6f42c1;">Add New University</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body bg-light">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g. University of Florida" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Country" class="form-label fw-bold"></label>
+                            <input asp-for="Country" class="form-control" placeholder="e.g. USA" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StateOrCity" class="form-label fw-bold"></label>
+                            <input asp-for="StateOrCity" class="form-control" placeholder="e.g. Florida" />
+                            <span asp-validation-for="StateOrCity" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CarnegieClassification" class="form-label fw-bold"></label>
+                            <input asp-for="CarnegieClassification" class="form-control" placeholder="e.g. R1: Doctoral University" />
+                            <span asp-validation-for="CarnegieClassification" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StudentFacultyRatio" class="form-label fw-bold"></label>
+                            <input asp-for="StudentFacultyRatio" class="form-control" placeholder="e.g. 17.5" type="number" step="0.1" />
+                            <span asp-validation-for="StudentFacultyRatio" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EstimatedLivingCost" class="form-label fw-bold"></label>
+                            <input asp-for="EstimatedLivingCost" class="form-control" type="number" />
+                            <span asp-validation-for="EstimatedLivingCost" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Ranking" class="form-label fw-bold"></label>
+                            <input asp-for="Ranking" class="form-control" type="number" />
+                            <span asp-validation-for="Ranking" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn text-white fw-bold" style="background-color: #6f42c1;">Create University</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary ms-2">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

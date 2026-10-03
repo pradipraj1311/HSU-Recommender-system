@@ -21,6 +21,12 @@ namespace HSU_Recommender_system.Models
 
         [Display(Name = "Global Ranking")]
         public int Ranking { get; set; }
+
+        [Display(Name = "Global Carnegie Classification")]
+        public string? CarnegieClassification { get; set; }
+
+        [Display(Name = "Student-to-Faculty Ratio")]
+        public double StudentFacultyRatio { get; set; }
         public ICollection<AcademicProgram>? Programs { get; set; }
 
     }

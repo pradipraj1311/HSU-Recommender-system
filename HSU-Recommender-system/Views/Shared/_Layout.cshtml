@@ -26,9 +26,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                           <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="StudentProfile" asp-action="Manage">My Profile</a>
-</li>
+
+
+
+                                     @if (User.IsInRole("Student"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="StudentProfile" asp-action="Manage">My Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Recommendations" asp-action="Index">My Matches</a>
+                                </li>
+                            }
+
 
                         @if (User.IsInRole("Admin"))
                         {
@@ -42,6 +52,7 @@
                                     <li><a class="dropdown-item" asp-area="" asp-controller="AcademicPrograms" asp-action="Index">Manage Programs</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger fw-bold" asp-area="" asp-controller="UserManagement" asp-action="Index">Manage User Roles</a></li>
+                                    
                                 </ul>
                             </li>
                         }

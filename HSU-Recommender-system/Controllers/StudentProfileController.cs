@@ -8,7 +8,7 @@ using HSU_Recommender_system.Models;
 
 namespace HSU_Recommender_system.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Student")]
     public class StudentProfileController : Controller
     {
         private readonly ApplicationDbContext _context;
