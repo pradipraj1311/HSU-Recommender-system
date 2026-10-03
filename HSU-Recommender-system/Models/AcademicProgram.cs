@@ -28,14 +28,26 @@ namespace HSU_Recommender_system.Models
         public double MinCGPA { get; set; }
         public double MinIELTS { get; set; }
     
-        [Display(Name = "Historical RA Chance (%)")]
+        [Display(Name = "RA Chance (%)")]
         public int HistoricalRAChance { get; set; }
 
-        [Display(Name = "Historical TA Chance (%)")]
+        [Display(Name = "TA Chance (%)")]
         public int HistoricalTAChance { get; set; }
+
+        [Display(Name = "Minimum GRE Quant Score")]
+        public int TargetGREQuant { get; set; }
+
+        [Display(Name = "Is GRE Required?")]
+        public bool IsGRERequired { get; set; }
 
         [Display(Name = "Research Fit Keywords (Comma separated)")]
         public string? ResearchKeywords { get; set; }
+
+        [Display(Name = "OpenAlex Concept ID / Institution ID")]
+        public string? OpenAlexInstitutionId { get; set; }
+
+     
+
 
         public ICollection<AdmissionDeadline>? Deadlines { get; set; }
     }

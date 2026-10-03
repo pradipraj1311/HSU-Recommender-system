@@ -1,95 +1,58 @@
 @model IEnumerable<HSU_Recommender_system.Models.AcademicProgram>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage Academic Programs";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <h2 class="text-purple fw-bold mb-0" style="color: #6f42c1;">Manage Academic Programs</h2>
+    <a asp-action="Create" class="btn btn-primary fw-bold">
+        <i class="bi bi-plus-circle"></i> Add New Program
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UniversityId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.University)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DegreeName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Department)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalTuitionFee)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MinCGPA)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MinIELTS)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HistoricalRAChance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HistoricalTAChance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResearchKeywords)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deadlines)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.UniversityId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.University)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DegreeName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Department)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TotalTuitionFee)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.MinCGPA)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.MinIELTS)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.HistoricalRAChance)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.HistoricalTAChance)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ResearchKeywords)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Deadlines)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive shadow-sm">
+    <table class="table table-hover align-middle bg-white mb-0">
+        <thead class="table-dark">
+            <tr>
+                <th>Degree / Department</th>
+                <th>University</th>
+                <th>Target GRE (Quant)</th>
+                <th>Research Keywords</th>
+                <th>RA / TA Chance</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        <span class="fw-bold d-block">@Html.DisplayFor(modelItem => item.DegreeName)</span>
+                        <small class="text-muted">@Html.DisplayFor(modelItem => item.Department)</small>
+                    </td>
+                    <td class="fw-semibold text-primary">
+                        @Html.DisplayFor(modelItem => item.University.Name)
+                    </td>
+                    <td>
+                        @if(item.IsGRERequired) {
+                            <span class="badge bg-danger">Req: @item.TargetGREQuant</span>
+                        } else {
+                            <span class="badge bg-success">Optional (Target: @item.TargetGREQuant)</span>
+                        }
+                    </td>
+                    <td>
+                        <small class="text-muted">@Html.DisplayFor(modelItem => item.ResearchKeywords)</small>
+                    </td>
+                    <td>
+                        <span class="badge bg-info text-dark">RA: @item.HistoricalRAChance%</span>
+                        <span class="badge bg-secondary">TA: @item.HistoricalTAChance%</span>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary mb-1">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger mb-1">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

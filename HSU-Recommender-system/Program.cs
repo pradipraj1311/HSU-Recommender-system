@@ -21,6 +21,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+
 
 var app = builder.Build();
 
@@ -43,7 +45,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
 
 

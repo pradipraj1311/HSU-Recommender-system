@@ -1,0 +1,60 @@
+@model IEnumerable<HSU_Recommender_system.Models.University>
+
+@{
+    ViewData["Title"] = "Manage Universities";
+}
+
+<h2 class="mb-4 text-purple fw-bold" style="color: #6f42c1;">Manage Universities</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a asp-action="Create" class="btn btn-primary fw-bold">
+        <i class="bi bi-plus-circle"></i> Add Single University
+    </a>
+    
+    <form asp-action="UploadCSV" method="post" enctype="multipart/form-data" class="d-flex align-items-center bg-light p-2 rounded border border-light-subtle shadow-sm">
+        <label class="me-2 fw-semibold text-muted small">Bulk Import:</label>
+        <input type="file" name="file" class="form-control form-control-sm me-2" accept=".csv" required style="max-width: 250px;" />
+        <button type="submit" class="btn btn-sm text-white fw-bold" style="background-color: #6f42c1;">
+            Upload CSV
+        </button>
+    </form>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success shadow-sm">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger shadow-sm">@TempData["ErrorMessage"]</div>
+}
+
+<div class="table-responsive shadow-sm">
+    <table class="table table-hover align-middle bg-white mb-0">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Country)</th>
+                <th>Research Class</th>
+                <th>S/F Ratio</th>
+                <th>@Html.DisplayNameFor(model => model.Ranking)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td class="fw-bold">@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Country)</td>
+                    <td><span class="badge bg-secondary">@item.CarnegieClassification</span></td>
+                    <td>@Html.DisplayFor(modelItem => item.StudentFacultyRatio)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Ranking)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
