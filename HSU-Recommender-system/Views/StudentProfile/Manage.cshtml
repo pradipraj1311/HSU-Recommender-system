@@ -9,7 +9,7 @@
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
                 <div class="card-header text-white" style="background-color: #6f42c1;">
-                    <h5 class="mb-0">Academic & Financial Profile Parameters</h5>
+                    <h5 class="mb-0">Academic, Research & Financial Profile</h5>
                 </div>
                 <div class="card-body bg-light">
                     @if (TempData["SuccessMessage"] != null)
@@ -20,19 +20,38 @@
                         </div>
                     }
 
-                    <form asp-action="Manage" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                   
+                        <form asp-action="Manage" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    
+    <!-- Crucial Hidden Fields for Editability -->
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
 
                         <div class="row g-3">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="CGPA" class="form-label fw-bold"></label>
-                                <input asp-for="CGPA" class="form-control" type="number" step="0.01" placeholder="e.g. 8.5" />
-                                <span asp-validation-for="CGPA" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="EnglishProficiencyScore" class="form-label fw-bold"></label>
-                                <input asp-for="EnglishProficiencyScore" class="form-control" type="number" step="0.5" placeholder="e.g. 7.5" />
-                                <span asp-validation-for="EnglishProficiencyScore" class="text-danger"></span>
+                            <!-- Academic Basics (Split into 3 columns) -->
+                            <div class="col-md-4 mb-3">
+    <label asp-for="CGPA" class="form-label fw-bold">CGPA (Out of 10)</label>
+    <input asp-for="CGPA" class="form-control" type="number" step="0.01" placeholder="e.g. 8.5" />
+    <span asp-validation-for="CGPA" class="text-danger"></span>
+</div>
+<div class="col-md-4 mb-3">
+    <label asp-for="EnglishProficiencyScore" class="form-label fw-bold">IELTS / TOEFL</label>
+    <input asp-for="EnglishProficiencyScore" class="form-control" type="number" step="0.5" placeholder="e.g. 7.5" />
+    <span asp-validation-for="EnglishProficiencyScore" class="text-danger"></span>
+</div>
+<div class="col-md-4 mb-3">
+    <label asp-for="GREQuantScore" class="form-label fw-bold text-primary">GRE Quant (130-170)</label>
+    <input asp-for="GREQuantScore" class="form-control border-primary" type="number" placeholder="e.g. 165" />
+    <span asp-validation-for="GREQuantScore" class="text-danger"></span>
+</div>
+
+                            <!-- Research & Experience (Game Changer Fields) -->
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="ResearchInterests" class="form-label fw-bold text-primary">Core Research Interests (OpenAlex Match)</label>
+                                <input asp-for="ResearchInterests" class="form-control border-primary" placeholder="e.g. Artificial Intelligence, Machine Learning, Data Science" />
+                                <span asp-validation-for="ResearchInterests" class="text-danger"></span>
+                                <small class="text-muted">Enter keywords separated by commas. Our AI will match these with university faculty research!</small>
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -46,6 +65,7 @@
                                 <span asp-validation-for="NumberOfResearchPapers" class="text-danger"></span>
                             </div>
 
+                            <!-- Financials & Preferences -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="MaximumBudget" class="form-label fw-bold"></label>
                                 <div class="input-group">
