@@ -14,13 +14,22 @@ namespace HSU_Recommender_system.Models
         public string UserId { get; set; } = string.Empty;
         public ApplicationUser? ApplicationUser { get; set; }
 
-        [Required]
-        [Range(0.0, 10.0, ErrorMessage = "CGPA must be between 0 and 10")]
+        [Display(Name = "CGPA (Out of 10)")]
+        [Range(0.0, 10.0, ErrorMessage = "CGPA must be measured on a 10-point scale (e.g., 7.5 or 8.0).")]
         public double CGPA { get; set; }
 
-        [Required]
         [Display(Name = "IELTS / TOEFL Score")]
+        [Range(0.0, 120.0, ErrorMessage = "Please enter a valid IELTS (0-9) or TOEFL (0-120) score.")]
         public double EnglishProficiencyScore { get; set; }
+
+        [Display(Name = "GRE Quant Score")]
+        [Range(130, 170, ErrorMessage = "The GRE Quantitative section is strictly scored between 130 and 170.")]
+        public int GREQuantScore { get; set; }
+
+        [Display(Name = "Core Research Interests (Comma separated)")]
+        public string? ResearchInterests { get; set; }
+
+
 
         [Required]
         [Display(Name = "Maximum Budget (USD)")]

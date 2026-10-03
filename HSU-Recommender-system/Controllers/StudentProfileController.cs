@@ -22,22 +22,22 @@ namespace HSU_Recommender_system.Controllers
 
         private async Task PopulateDynamicDropdownsAsync()
         {
-           
+
             var countries = await _context.Universities
                 .Select(u => u.Country)
                 .Distinct()
                 .OrderBy(c => c)
                 .ToListAsync();
-            
+
             ViewBag.Countries = new SelectList(countries);
 
-            
+
             var degrees = await _context.AcademicPrograms
                 .Select(p => p.DegreeName)
                 .Distinct()
                 .OrderBy(d => d)
                 .ToListAsync();
-                
+
             ViewBag.Degrees = new SelectList(degrees);
         }
 
@@ -47,12 +47,18 @@ namespace HSU_Recommender_system.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound("Authentication required.");
 
-            await PopulateDynamicDropdownsAsync();
+            // FETCH EXISTING DATA: If the user has a profile, load it. Otherwise, create a blank one.
+            var existingProfile = await _context.StudentProfiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
+            if (existingProfile == null)
+            {
+                existingProfile = new StudentProfile();
+            }
 
-            var profile = await _context.StudentProfiles
-                .FirstOrDefaultAsync(p => p.UserId == user.Id);
+            // Populate dropdowns
+            ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().ToListAsync());
+            ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().ToListAsync());
 
-            return View(profile ?? new StudentProfile());
+            return View(existingProfile);
         }
 
         [HttpPost]
@@ -62,38 +68,46 @@ namespace HSU_Recommender_system.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound("Authentication required.");
 
+            // STRICT VALIDATION BYPASS: Ignore navigation properties and primary keys
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+            ModelState.Remove("Id");
+
             if (ModelState.IsValid)
             {
-                var existingProfile = await _context.StudentProfiles
-                    .FirstOrDefaultAsync(p => p.UserId == user.Id);
+                var existingProfile = await _context.StudentProfiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
 
                 if (existingProfile == null)
                 {
                     model.UserId = user.Id;
-                    _context.Add(model);
+                    _context.StudentProfiles.Add(model);
                 }
                 else
                 {
                     existingProfile.CGPA = model.CGPA;
                     existingProfile.EnglishProficiencyScore = model.EnglishProficiencyScore;
-                    existingProfile.MaximumBudget = model.MaximumBudget;
+                    existingProfile.GREQuantScore = model.GREQuantScore;
+                    existingProfile.ResearchInterests = model.ResearchInterests;
                     existingProfile.NumberOfProjects = model.NumberOfProjects;
                     existingProfile.NumberOfResearchPapers = model.NumberOfResearchPapers;
+                    existingProfile.MaximumBudget = model.MaximumBudget;
                     existingProfile.WorkExperienceMonths = model.WorkExperienceMonths;
                     existingProfile.TargetDegree = model.TargetDegree;
                     existingProfile.PreferredCountry = model.PreferredCountry;
-                    
-                    _context.Update(existingProfile);
+
+                    _context.StudentProfiles.Update(existingProfile);
                 }
-                
+
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Profile parameters updated successfully!";
+                TempData["SuccessMessage"] = "Profile saved successfully! Click 'My Matches' to see your university recommendations.";
                 return RedirectToAction(nameof(Manage));
             }
-            
-           
-            await PopulateDynamicDropdownsAsync();
+
+            // If it still fails, reload dropdowns so the UI doesn't crash
+            ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().ToListAsync());
+            ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().ToListAsync());
+
             return View(model);
         }
     }
-}
+    }
