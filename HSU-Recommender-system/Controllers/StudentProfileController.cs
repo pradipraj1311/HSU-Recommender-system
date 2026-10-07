@@ -47,14 +47,12 @@ namespace HSU_Recommender_system.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound("Authentication required.");
 
-            // FETCH EXISTING DATA: If the user has a profile, load it. Otherwise, create a blank one.
             var existingProfile = await _context.StudentProfiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
             if (existingProfile == null)
             {
                 existingProfile = new StudentProfile();
             }
 
-            // Populate dropdowns
             ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().ToListAsync());
             ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().ToListAsync());
 
@@ -68,7 +66,6 @@ namespace HSU_Recommender_system.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound("Authentication required.");
 
-            // STRICT VALIDATION BYPASS: Ignore navigation properties and primary keys
             ModelState.Remove("UserId");
             ModelState.Remove("User");
             ModelState.Remove("Id");
@@ -103,7 +100,6 @@ namespace HSU_Recommender_system.Controllers
                 return RedirectToAction(nameof(Manage));
             }
 
-            // If it still fails, reload dropdowns so the UI doesn't crash
             ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().ToListAsync());
             ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().ToListAsync());
 

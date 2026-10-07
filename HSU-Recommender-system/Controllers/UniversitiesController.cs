@@ -24,13 +24,11 @@ public class UniversitiesController : Controller
         _context = context;
     }
 
-    // GET: UNIVERSITYS
     public async Task<IActionResult> Index()    
     {
         return View(await _context.Universities.ToListAsync());
     }
 
-    // GET: UNIVERSITYS/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -48,15 +46,11 @@ public class UniversitiesController : Controller
         return View(university);
     }
 
-    // GET: UNIVERSITYS/Create
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: UNIVERSITYS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Country,StateOrCity,EstimatedLivingCost,Ranking,Programs")] University university)
@@ -70,7 +64,6 @@ public class UniversitiesController : Controller
         return View(university);
     }
 
-    // GET: UNIVERSITYS/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -86,9 +79,7 @@ public class UniversitiesController : Controller
         return View(university);
     }
 
-    // POST: UNIVERSITYS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Country,StateOrCity,EstimatedLivingCost,Ranking,Programs")] University university)
@@ -121,7 +112,6 @@ public class UniversitiesController : Controller
         return View(university);
     }
 
-    // GET: UNIVERSITYS/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -139,7 +129,6 @@ public class UniversitiesController : Controller
         return View(university);
     }
 
-    // POST: UNIVERSITYS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
@@ -175,7 +164,6 @@ public class UniversitiesController : Controller
 
                 using var csv = new CsvReader(stream, csvConfig);
 
-                // ૧. CSV માંથી બધો કમ્બાઇન્ડ ડેટા DTO માં લોડ કરો
                 var records = csv.GetRecords<ImportDTO>().ToList();
 
                 if (records.Any())
@@ -183,20 +171,17 @@ public class UniversitiesController : Controller
                     int uniCount = 0;
                     int progCount = 0;
 
-                    // ૨. ડુપ્લિકેટ ના થાય તે માટે યુનિવર્સિટીના નામ પ્રમાણે ગ્રુપ બનાવો
                     var uniqueUniversities = records.GroupBy(r => r.UniversityName).ToList();
 
                     foreach (var uniGroup in uniqueUniversities)
                     {
                         var firstRow = uniGroup.First();
 
-                        // ચેક કરો કે ડેટાબેઝમાં યુનિવર્સિટી પહેલેથી છે કે નહીં?
                         var university = await _context.Universities
                             .FirstOrDefaultAsync(u => u.Name == firstRow.UniversityName);
 
                         if (university == null)
                         {
-                            // નવી યુનિવર્સિટી બનાવો
                             university = new University
                             {
                                 Name = firstRow.UniversityName,
@@ -208,14 +193,12 @@ public class UniversitiesController : Controller
                                 Ranking = firstRow.Ranking
                             };
                             _context.Universities.Add(university);
-                            await _context.SaveChangesAsync(); // આનાથી નવી યુનિવર્સિટીનો Id તરત જનરેટ થશે
+                            await _context.SaveChangesAsync(); 
                             uniCount++;
                         }
 
-                        // ૩. હવે આ યુનિવર્સિટીના ગ્રુપમાં રહેલા બધા પ્રોગ્રામ્સને ડેટાબેઝમાં નાખો
                         foreach (var progRow in uniGroup)
                         {
-                            // ડુપ્લિકેટ પ્રોગ્રામ ચેક
                             var programExists = await _context.AcademicPrograms
                                 .AnyAsync(p => p.DegreeName == progRow.DegreeName && p.UniversityId == university.Id);
 
@@ -223,7 +206,7 @@ public class UniversitiesController : Controller
                             {
                                 var program = new AcademicProgram
                                 {
-                                    UniversityId = university.Id, // અહીં લિંક થયું!
+                                    UniversityId = university.Id, 
                                     DegreeName = progRow.DegreeName,
                                     Department = progRow.Department,
                                     TotalTuitionFee = progRow.TotalTuitionFee,
@@ -242,7 +225,7 @@ public class UniversitiesController : Controller
                         }
                     }
 
-                    await _context.SaveChangesAsync(); // ફાઇનલ સેવ
+                    await _context.SaveChangesAsync(); 
                     TempData["SuccessMessage"] = $"Successfully imported {uniCount} new Universities and {progCount} new Academic Programs!";
                 }
             }

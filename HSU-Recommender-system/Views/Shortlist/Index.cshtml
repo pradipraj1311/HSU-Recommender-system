@@ -1,0 +1,82 @@
+﻿@model IEnumerable<HSU_Recommender_system.Models.ShortlistedProgram>
+
+@{
+    ViewData["Title"] = "My Shortlist";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0" style="color: #6f42c1;">My Application </h2>
+        <span class="badge bg-primary fs-6 py-2 px-3 rounded-pill">Total Saved: @Model.Count()</span>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success shadow-sm alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info shadow-sm py-4 text-center">
+            <h5 class="fw-bold">Your shortlist is empty.</h5>
+            <p class="mb-0">Head over to <a asp-controller="Recommendations" asp-action="Index" class="fw-bold text-decoration-none">My Matches</a> to start saving universities!</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm rounded border border-light-subtle">
+            <table class="table table-hover align-middle bg-white mb-0">
+                <thead class="table-light text-muted">
+                    <tr>
+                        <th class="py-3">University & Program</th>
+                        <th class="py-3">Date Saved</th>
+                        <th class="py-3">Application Status</th>
+                        <th class="py-3 text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="py-3">
+                                <span class="fw-bold d-block text-dark fs-5">@item.AcademicProgram?.University?.Name</span>
+                                <span class="text-muted small border border-light-subtle rounded px-2 py-1 bg-light mt-1 d-inline-block">
+                                    @item.AcademicProgram?.DegreeName
+                                </span>
+                            </td>
+                            <td class="text-muted small fw-semibold py-3">@item.AddedOn.ToString("MMM dd, yyyy")</td>
+                            <td class="py-3">
+                                <form asp-action="UpdateStatus" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <select name="status" class="form-select form-select-sm w-auto fw-bold shadow-sm border-0
+                                        @(item.Status == "Saved" ? "bg-light text-secondary" :
+                                          item.Status == "Preparing" ? "bg-warning text-dark" :
+                                          item.Status == "Applied" ? "bg-info text-dark" :
+                                          item.Status == "Accepted" ? "bg-success text-white" : "bg-danger text-white")"
+                                            onchange="this.form.submit()">
+                                        <option value="Saved" selected="@(item.Status == "Saved")"> Saved</option>
+                                        <option value="Preparing" selected="@(item.Status == "Preparing")"> Preparing Docs</option>
+                                        <option value="Applied" selected="@(item.Status == "Applied")">Applied</option>
+                                        <option value="Accepted" selected="@(item.Status == "Accepted")"> Accepted</option>
+                                        <option value="Rejected" selected="@(item.Status == "Rejected")">Rejected</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td class="text-end py-3">
+                                <form asp-action="Remove" method="post">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger fw-bold rounded-3" onclick="return confirm('Are you sure you want to remove this from your shortlist?');">
+                                        <i class="bi bi-trash3-fill"></i> Drop
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

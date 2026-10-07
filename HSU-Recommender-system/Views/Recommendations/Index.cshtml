@@ -5,7 +5,22 @@
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4 fw-bold" style="color: #6f42c1;">Personalized University Recommendations</h2>
+    <h2 class="mb-4 fw-bold" style="color: #6f42c1;">University Recommendations</h2>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success shadow-sm alert-dismissible fade show">
+                @TempData["SuccessMessage"] <a asp-controller="Shortlist" asp-action="Index" class="fw-bold text-success text-decoration-underline">View Shortlist</a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-warning shadow-sm alert-dismissible fade show">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
 
     @if (!Model.Any())
     {
@@ -15,7 +30,6 @@
     }
     else
     {
-        <!-- CHART.JS VISUALIZATION SECTION -->
         <div class="card shadow-sm border-0 mb-5">
             <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
                 <h5 class="text-muted fw-bold">Comparative Analytics</h5>
@@ -27,7 +41,6 @@
             </div>
         </div>
 
-        <h4 class="mb-3 text-muted">Detailed Breakdown</h4>
         <div class="row g-4">
             @foreach (var result in Model)
             {
@@ -78,6 +91,15 @@
                                     <span class="d-block text-muted small">TA Chance</span>
                                     <span class="fw-bold text-success">@result.TaChance%</span>
                                 </div>
+                                <hr class="text-light-subtle mt-4 mb-3" />
+
+                                <form asp-controller="Shortlist" asp-action="Add" method="post" class="d-grid mt-2">
+                                    <input type="hidden" name="programId" value="@result.Program?.Id" />
+                                    <button type="submit" class="btn btn-outline-primary fw-bold rounded-3 py-2">
+                                        <i class="bi bi-bookmark-plus"></i> Save to Shortlist
+                                    </button>
+                                </form>
+
                             </div>
                         </div>
                     </div>
