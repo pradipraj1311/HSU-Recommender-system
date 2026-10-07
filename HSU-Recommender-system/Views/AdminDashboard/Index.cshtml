@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "System Analytics";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4" style="color: #6f42c1;"><i class="bi bi-speedometer2"></i> Admin Analytics Dashboard</h2>
+
+    <!-- Top Metric Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow border-0 text-center py-4">
+                <h1 class="display-4 fw-bold mb-0">@ViewBag.TotalStudents</h1>
+                <p class="mb-0 fs-5">Active Students</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow border-0 text-center py-4">
+                <h1 class="display-4 fw-bold mb-0">@ViewBag.TotalUniversities</h1>
+                <p class="mb-0 fs-5">Universities</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white shadow border-0 text-center py-4">
+                <h1 class="display-4 fw-bold mb-0">@ViewBag.TotalPrograms</h1>
+                <p class="mb-0 fs-5">Academic Programs</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark shadow border-0 text-center py-4">
+                <h1 class="display-4 fw-bold mb-0">@ViewBag.TotalShortlists</h1>
+                <p class="mb-0 fs-5">Total Applications Tracked</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold">Top 5 Most Popular Universities</div>
+                <div class="card-body">
+                    <canvas id="popularChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold">Global Application Statuses</div>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data from C# Backend
+        const popularLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+        const popularData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+        
+        const statusLabels = @Html.Raw(Json.Serialize(ViewBag.StatusLabels));
+        const statusData = @Html.Raw(Json.Serialize(ViewBag.StatusData));
+
+        // 1. Bar Chart (Popular Universities)
+        new Chart(document.getElementById('popularChart'), {
+            type: 'bar',
+            data: {
+                labels: popularLabels,
+                datasets: [{
+                    label: 'Number of Student Saves',
+                    data: popularData,
+                    backgroundColor: '#6f42c1',
+                    borderRadius: 5
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // 2. Doughnut Chart (Application Statuses)
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: ['#6c757d', '#ffc107', '#0dcaf0', '#198754', '#dc3545'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, cutout: '70%' }
+        });
+    </script>
+}
