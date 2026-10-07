@@ -75,7 +75,7 @@ namespace HSU_Recommender_system.Services
                     University = program.University,
                     Program = program,
                     AdmissionChance = Math.Round(basicAcademicScore, 1),
-                    BudgetFit = Math.Round(researchFitScore, 1), // Using BudgetFit UI space to show Research Fit
+                    BudgetFit = Math.Round(researchFitScore, 1), 
                     RaChance = Math.Round(Math.Min(100, raChance), 1),
                     TaChance = Math.Round(Math.Min(100, taChance), 1),
                     OverallScore = Math.Round(overallScore, 1),

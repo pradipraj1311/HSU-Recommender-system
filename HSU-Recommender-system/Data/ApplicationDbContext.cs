@@ -14,6 +14,7 @@ namespace HSU_Recommender_system.Data
 
         public DbSet<University> Universities { get; set; }
         public DbSet<AcademicProgram> AcademicPrograms { get; set; }
+        public DbSet<ShortlistedProgram> ShortlistedPrograms { get; set; }
         public DbSet<AdmissionDeadline> AdmissionDeadlines { get; set; }
         public DbSet<StudentProfile> StudentProfiles { get; set; }
     }
