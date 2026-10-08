@@ -5,7 +5,6 @@
 <div class="container mt-4">
     <h2 class="fw-bold mb-4" style="color: #6f42c1;"><i class="bi bi-speedometer2"></i> Admin Analytics Dashboard</h2>
 
-    <!-- Top Metric Cards -->
     <div class="row g-4 mb-5">
         <div class="col-md-3">
             <div class="card bg-primary text-white shadow border-0 text-center py-4">
@@ -33,7 +32,6 @@
         </div>
     </div>
 
-    <!-- Charts Row -->
     <div class="row g-4">
         <div class="col-md-7">
             <div class="card shadow-sm border-0 h-100">
@@ -57,14 +55,12 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Data from C# Backend
         const popularLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
         const popularData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
         
         const statusLabels = @Html.Raw(Json.Serialize(ViewBag.StatusLabels));
         const statusData = @Html.Raw(Json.Serialize(ViewBag.StatusData));
 
-        // 1. Bar Chart (Popular Universities)
         new Chart(document.getElementById('popularChart'), {
             type: 'bar',
             data: {
@@ -79,7 +75,6 @@
             options: { responsive: true, plugins: { legend: { display: false } } }
         });
 
-        // 2. Doughnut Chart (Application Statuses)
         new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
