@@ -1,6 +1,16 @@
 using Microsoft.AspNetCore.Identity;
-namespace HSU_Recommender_system.Data;
-// Add profile data for application users by adding properties to the ApplicationUser class
-public class ApplicationUser : IdentityUser
+using System.ComponentModel.DataAnnotations;
+
+namespace HSU_Recommender_system.Data
 {
+    public class ApplicationUser : IdentityUser
+    {
+        [PersonalData]
+        [MaxLength(100)]
+        public string? FirstName { get; set; }
+
+        [PersonalData]
+        [MaxLength(100)]
+        public string? LastName { get; set; }
+    }
 }

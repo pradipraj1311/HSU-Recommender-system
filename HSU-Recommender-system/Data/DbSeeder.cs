@@ -22,6 +22,7 @@ namespace HSU_Recommender_system.Data
             }
 
             var adminUsers = await userManager.GetUsersInRoleAsync("Admin");
+
             if (adminUsers.Count == 0)
             {
                 var adminEmail = config["AdminSeed:Email"];
