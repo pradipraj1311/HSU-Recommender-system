@@ -10,7 +10,7 @@
         public double StudentFacultyRatio { get; set; }
         public int Ranking { get; set; }
 
-// programs
+
 public string DegreeName { get; set; } = string.Empty;
         public string? Department { get; set; }
         public decimal TotalTuitionFee { get; set; }
