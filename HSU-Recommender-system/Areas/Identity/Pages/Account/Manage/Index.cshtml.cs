@@ -56,6 +56,13 @@ public class IndexModel : PageModel
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        /// 
+        [Display(Name = "First Name")]
+        public string? FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
+        public string? LastName { get; set; }
+
         [Phone]
         [Display(Name = "Phone number")]
         public string? PhoneNumber { get; set; }
@@ -70,6 +77,8 @@ public class IndexModel : PageModel
 
         Input = new InputModel
         {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
             PhoneNumber = phoneNumber
         };
     }
@@ -109,6 +118,18 @@ public class IndexModel : PageModel
                 StatusMessage = "Unexpected error when trying to set phone number.";
                 return RedirectToPage();
             }
+        }
+
+        if (Input.FirstName != user.FirstName)
+        {
+            user.FirstName = Input.FirstName;
+            await _userManager.UpdateAsync(user);
+        }
+
+        if (Input.LastName != user.LastName)
+        {
+            user.LastName = Input.LastName;
+            await _userManager.UpdateAsync(user);
         }
 
         await _signInManager.RefreshSignInAsync(user);
