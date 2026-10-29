@@ -9,6 +9,11 @@
     <a asp-action="Create" class="btn btn-primary fw-bold">
         <i class="bi bi-plus-circle"></i> Add New Program
     </a>
+
+    <form asp-controller="AcademicPrograms" asp-action="UploadProgramsCsv" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" class="form-control mb-2" accept=".csv" required />
+        <button type="submit" class="btn btn-outline-success fw-bold">Upload Programs CSV</button>
+    </form>
 </div>
 
 <div class="table-responsive shadow-sm">

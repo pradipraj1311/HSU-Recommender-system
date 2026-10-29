@@ -22,23 +22,24 @@ namespace HSU_Recommender_system.Controllers
 
         private async Task PopulateDynamicDropdownsAsync()
         {
+            ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().OrderBy(c => c).ToListAsync());
+            ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().OrderBy(d => d).ToListAsync());
 
-            var countries = await _context.Universities
-                .Select(u => u.Country)
-                .Distinct()
-                .OrderBy(c => c)
+            // DYNAMICALLY EXTRACT ALL RESEARCH KEYWORDS UPLOADED BY ADMIN
+            var allKeywords = await _context.AcademicPrograms
+                .Where(p => !string.IsNullOrWhiteSpace(p.ResearchKeywords))
+                .Select(p => p.ResearchKeywords)
                 .ToListAsync();
 
-            ViewBag.Countries = new SelectList(countries);
-
-
-            var degrees = await _context.AcademicPrograms
-                .Select(p => p.DegreeName)
+            var distinctKeywords = allKeywords
+                .Where(k => k != null)
+                .SelectMany(k => k!.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                .Select(k => k.Trim())
                 .Distinct()
-                .OrderBy(d => d)
-                .ToListAsync();
+                .OrderBy(k => k)
+                .ToList();
 
-            ViewBag.Degrees = new SelectList(degrees);
+            ViewBag.ResearchKeywords = new SelectList(distinctKeywords);
         }
 
         [HttpGet]
@@ -47,15 +48,9 @@ namespace HSU_Recommender_system.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound("Authentication required.");
 
-            var existingProfile = await _context.StudentProfiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
-            if (existingProfile == null)
-            {
-                existingProfile = new StudentProfile();
-            }
+            var existingProfile = await _context.StudentProfiles.FirstOrDefaultAsync(p => p.UserId == user.Id) ?? new StudentProfile();
 
-            ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().ToListAsync());
-            ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().ToListAsync());
-
+            await PopulateDynamicDropdownsAsync();
             return View(existingProfile);
         }
 
@@ -85,25 +80,23 @@ namespace HSU_Recommender_system.Controllers
                     existingProfile.EnglishProficiencyScore = model.EnglishProficiencyScore;
                     existingProfile.GREQuantScore = model.GREQuantScore;
                     existingProfile.ResearchInterests = model.ResearchInterests;
-                    existingProfile.NumberOfProjects = model.NumberOfProjects;
                     existingProfile.NumberOfResearchPapers = model.NumberOfResearchPapers;
-                    existingProfile.MaximumBudget = model.MaximumBudget;
                     existingProfile.WorkExperienceMonths = model.WorkExperienceMonths;
                     existingProfile.TargetDegree = model.TargetDegree;
                     existingProfile.PreferredCountry = model.PreferredCountry;
 
+                    // We intentionally ignore Budget and MajorProjects here as requested
                     _context.StudentProfiles.Update(existingProfile);
                 }
 
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Profile saved successfully! Click 'My Matches' to see your university recommendations.";
-                return RedirectToAction(nameof(Manage));
+
+                // REDIRECT DIRECTLY TO RECOMMENDATIONS INSTEAD OF RELOADING THE FORM
+                return RedirectToAction("Index", "Recommendations");
             }
 
-            ViewBag.Degrees = new SelectList(await _context.AcademicPrograms.Select(p => p.DegreeName).Distinct().ToListAsync());
-            ViewBag.Countries = new SelectList(await _context.Universities.Select(u => u.Country).Distinct().ToListAsync());
-
+            await PopulateDynamicDropdownsAsync();
             return View(model);
         }
     }
-    }
+}

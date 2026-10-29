@@ -1,8 +1,119 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using HSU_Recommender_system.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (!SignInManager.IsSignedIn(User))
+{
+    <div class="container my-5">
+        <div class="row align-items-center rounded-4 shadow-sm p-5 bg-white border border-light-subtle">
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-bold mb-4" style="color: #6f42c1;">Find Your Best University</h1>
+                <p class="lead text-muted mb-4">
+                    Our intelligent recommendation engine analyzes your academic profile, research interests, and budget to match you with top global universities. Stop guessing and start applying with confidence.
+                </p>
+                <div class="d-grid gap-3 d-sm-flex">
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-lg text-white fw-bold px-5 rounded-pill shadow-sm" style="background-color: #6f42c1;">Get Started</a>
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-dark btn-lg fw-bold px-5 rounded-pill">Log In</a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <i class="bi bi-globe-americas" style="font-size: 12rem; color: #e9ecef;"></i>
+            </div>
+        </div>
+    </div>
+}
+else if (User.IsInRole("Admin"))
+{
+    <div class="container mt-4 mb-5">
+        <p class="text-muted mb-4">Manage system data, monitor analytics, and control user access</p>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4 hover-shadow">
+                    <i class="bi bi-graph-up text-primary" style="font-size: 3rem;"></i>
+                    <h5 class="fw-bold mt-3">Analytics</h5>
+                    <p class="text-muted small">View live system metrics and popularity trends.</p>
+                    <a asp-controller="AdminDashboard" asp-action="Index" class="btn btn-outline-primary fw-bold mt-auto rounded-pill">View Dashboard</a>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4 hover-shadow">
+                    <i class="bi bi-bank text-success" style="font-size: 3rem;"></i>
+                    <h5 class="fw-bold mt-3">Universities</h5>
+                    <p class="text-muted small">Add, edit, or bulk upload institutions.</p>
+                    <a asp-controller="Universities" asp-action="Index" class="btn btn-outline-success fw-bold mt-auto rounded-pill">Manage</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4 hover-shadow">
+                    <i class="bi bi-journal-bookmark-fill text-info" style="font-size: 3rem;"></i>
+                    <h5 class="fw-bold mt-3">Programs</h5>
+                    <p class="text-muted small">Update degree offerings and admission criteria.</p>
+                    <a asp-controller="AcademicPrograms" asp-action="Index" class="btn btn-outline-info fw-bold mt-auto rounded-pill">Manage</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4 hover-shadow">
+                    <i class="bi bi-people-fill text-warning" style="font-size: 3rem;"></i>
+                    <h5 class="fw-bold mt-3">Users</h5>
+                    <p class="text-muted small">Promote users to Admin and manage roles.</p>
+                    <a asp-controller="UserManagement" asp-action="Index" class="btn btn-outline-warning text-dark fw-bold mt-auto rounded-pill">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-4 mb-5">
+        <h2 class="fw-bold mb-4" style="color: #6f42c1;">My Dashboard</h2>
+        <p class="text-muted mb-4">Welcome back! Continue your university discovery journey below.</p>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4" style="background-color: #f8f9fa;">
+                    <i class="bi bi-search" style="font-size: 3rem; color: #6f42c1;"></i>
+                    <h4 class="fw-bold mt-3">Find University</h4>
+                    <p class="text-muted">Update your academic profile and find your perfect match.</p>
+                    <a asp-controller="StudentProfile" asp-action="Manage" class="btn text-white fw-bold mt-auto rounded-pill shadow-sm" style="background-color: #6f42c1;">Find University</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4" style="background-color: #f8f9fa;">
+                    <i class="bi bi-award-fill text-success" style="font-size: 3rem;"></i>
+                    <h4 class="fw-bold mt-3">My Matches</h4>
+                    <p class="text-muted">View your university recommendations and admission odds.</p>
+                    <a asp-controller="Recommendations" asp-action="Index" class="btn btn-outline-success fw-bold mt-auto rounded-pill">View Recommendations</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-4" style="background-color: #f8f9fa;">
+                    <i class="bi bi-bookmark-star-fill text-warning" style="font-size: 3rem;"></i>
+                    <h4 class="fw-bold mt-3">My Shortlist</h4>
+                    <p class="text-muted">Track your saved programs, application statuses</p>
+                    <a asp-controller="Shortlist" asp-action="Index" class="btn btn-outline-dark fw-bold mt-auto rounded-pill">Open Shortlist</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .hover-shadow {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
