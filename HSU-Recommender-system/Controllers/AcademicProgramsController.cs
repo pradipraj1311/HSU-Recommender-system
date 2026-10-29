@@ -1,9 +1,12 @@
 
+using CsvHelper;
+using CsvHelper.Configuration;
 using HSU_Recommender_system.Data;
 using HSU_Recommender_system.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 namespace HSU_Recommender_system.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -137,7 +140,75 @@ namespace HSU_Recommender_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AcademicProgramExists(int? id)
+    
+[HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UploadProgramsCsv(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            TempData["ErrorMessage"] = "Please select a valid CSV file.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        using var stream = new StreamReader(file.OpenReadStream());
+        using var csv = new CsvReader(stream, new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HeaderValidated = null,
+            MissingFieldFound = null
+        });
+
+        var records = csv.GetRecords<ProgramCsvDTO>().ToList();
+        var addedCount = 0;
+        var notFoundCount = 0;
+
+        foreach (var record in records)
+        {
+            var university = await _context.Universities
+                .FirstOrDefaultAsync(u => u.Name.ToLower() == record.UniversityName.ToLower());
+
+            if (university != null)
+            {
+                var program = new AcademicProgram
+                {
+                    UniversityId = university.Id,
+                    DegreeName = record.DegreeName,
+                    Department = record.Department,
+                    TotalTuitionFee = record.TotalTuitionFee,
+                    MinCGPA = record.MinCGPA,
+                    MinIELTS = record.MinIELTS,
+                    HistoricalRAChance = record.HistoricalRAChance,
+                    HistoricalTAChance = record.HistoricalTAChance,
+                    TargetGREQuant = record.TargetGREQuant,
+                    IsGRERequired = record.IsGRERequired,
+                    ResearchKeywords = record.ResearchKeywords,
+                    OpenAlexInstitutionId = record.OpenAlexInstitutionId
+                };
+
+                _context.AcademicPrograms.Add(program);
+                addedCount++;
+            }
+            else
+            {
+                notFoundCount++;
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        if (notFoundCount > 0)
+        {
+            TempData["WarningMessage"] = $"Imported {addedCount} programs. Skipped {notFoundCount} programs because the University Name didn't match any existing records.";
+        }
+        else
+        {
+            TempData["SuccessMessage"] = $"Successfully imported {addedCount} programs.";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    private bool AcademicProgramExists(int? id)
         {
             return _context.AcademicPrograms.Any(e => e.Id == id);
         }

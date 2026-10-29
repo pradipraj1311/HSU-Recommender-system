@@ -1,106 +1,116 @@
 ﻿@model IEnumerable<HSU_Recommender_system.Models.UniversityRecommendationResult>
 
 @{
-    ViewData["Title"] = "My University Matches";
+    ViewData["Title"] = "Your AI Matches";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4 fw-bold" style="color: #6f42c1;">University Recommendations</h2>
-
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success shadow-sm alert-dismissible fade show">
-                @TempData["SuccessMessage"] <a asp-controller="Shortlist" asp-action="Index" class="fw-bold text-success text-decoration-underline">View Shortlist</a>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-warning shadow-sm alert-dismissible fade show">
-                @TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0" style="color: #6f42c1;"><i class="bi bi-award-fill"></i> Your Recommended Universities</h2>
+        <a asp-controller="StudentProfile" asp-action="Manage" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="bi bi-sliders"></i> Modify Search</a>
+    </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-warning shadow-sm">
-            <strong>No matches found.</strong> Please ensure you have completed your <a asp-controller="StudentProfile" asp-action="Manage">Academic Profile</a> and that the Admin has added universities to the database.
+        <div class="alert alert-warning shadow-sm border-0 rounded-3 p-4 text-center">
+            <h4 class="fw-bold">No exact matches found.</h4>
+            <p class="text-muted mb-0">Try adjusting your filters, or expanding your preferred country options in your search.</p>
         </div>
     }
     else
     {
-        <div class="card shadow-sm border-0 mb-5">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h5 class="text-muted fw-bold">Comparative Analytics</h5>
-            </div>
-            <div class="card-body">
-                <div style="height: 350px; width: 100%;">
-                    <canvas id="recommendationChart"></canvas>
-                </div>
-            </div>
-        </div>
-
         <div class="row g-4">
             @foreach (var result in Model)
             {
                 <div class="col-lg-6">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0 fw-bold">@result.University?.Name</h4>
-                            <span class="badge fs-6 
-                                @(result.Category.Contains("Best Fit") ? "bg-success" : 
-                                  result.Category.Contains("Target") ? "bg-warning text-dark" : 
-                                  result.Category.Contains("Safe") ? "bg-primary" : "bg-danger")">
-                                @result.Category
-                            </span>
+                    <div class="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                        <!-- Top Header Banner -->
+                        <div class="card-header border-bottom-0 p-4 text-white" style="background-color: @(result.Category.Contains("Prime") ? "#198754" : result.Category.Contains("Target") ? "#0dcaf0" : result.Category.Contains("Ambitious") ? "#fd7e14" : "#6f42c1")">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="mb-1 fw-bold">@result.University?.Name</h4>
+                                    <p class="mb-0 text-white-50"><i class="bi bi-geo-alt-fill"></i> @result.LocationDisplay</p>
+                                </div>
+                                <span class="badge bg-white text-dark fs-6 rounded-pill shadow-sm">
+                                    @result.Category
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h6 class="text-muted mb-3">@result.Program?.DegreeName | @result.University?.Country</h6>
-                            
-                            <div class="p-3 mb-3 bg-light rounded border border-light-subtle">
-                                <strong>Why recommended:</strong> @result.RecommendationReason
+
+                        <div class="card-body p-4">
+                            <!-- Quick Stats Row -->
+                            <div class="row text-center mb-4 g-2">
+                                <div class="col-4">
+                                    <div class="p-2 bg-light rounded-3">
+                                        <span class="d-block text-muted small fw-bold text-uppercase">Ranking</span>
+                                        <span class="fs-5 fw-bold" style="color:#6f42c1;">#@result.University?.Ranking</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-light rounded-3">
+                                        <span class="d-block text-muted small fw-bold text-uppercase">Total Cost</span>
+                                        <span class="fs-5 fw-bold text-dark">$@result.TotalEstimatedCost.ToString("N0")</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-light rounded-3">
+                                        <span class="d-block text-muted small fw-bold text-uppercase">Match Score</span>
+                                        <span class="fs-5 fw-bold text-success">@result.OverallScore%</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="mb-2">
-                                <div class="d-flex justify-content-between text-muted small mb-1">
-                                    <span>Overall Match Score</span>
-                                    <span class="fw-bold">@result.OverallScore%</span>
-                                </div>
-                                <div class="progress" style="height: 10px;">
-                                    <div class="progress-bar" style="background-color: #6f42c1; width: @result.OverallScore%" role="progressbar"></div>
-                                </div>
+                            <h6 class="fw-bold text-dark mb-2">@result.Program?.DegreeName in @result.Program?.Department</h6>
+
+                            <div class="p-3 mb-4 bg-light rounded-3 border-start border-4 border-primary">
+                                <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+                                <span class="text-dark small">@result.RecommendationReason</span>
                             </div>
 
-                            <div class="row mt-4">
-                                <div class="col-6 mb-3">
-                                    <span class="d-block text-muted small">Admission Chance</span>
-                                    <span class="fw-bold">@result.AdmissionChance%</span>
-                                </div>
-
-                                <div class="col-6 mb-3">
-                                    <span class="d-block text-muted small">Research Fit Score</span>
-                                    <span class="fw-bold">@result.BudgetFit%</span>
-                                </div>
-
+                            <!-- detailed metrics -->
+                            <div class="row g-3 mb-4">
                                 <div class="col-6">
-                                    <span class="d-block text-muted small">RA Chance</span>
-                                    <span class="fw-bold text-success">@result.RaChance%</span>
+                                    <span class="text-muted small d-block">Admission Probability</span>
+                                    <div class="progress mt-1" style="height: 6px;">
+                                        <div class="progress-bar bg-info" style="width: @result.AdmissionChance%"></div>
+                                    </div>
                                 </div>
+                                
                                 <div class="col-6">
-                                    <span class="d-block text-muted small">TA Chance</span>
-                                    <span class="fw-bold text-success">@result.TaChance%</span>
+                                    <span class="text-muted small d-block"><i class="bi bi-person-workspace"></i> Est. TA Chance</span>
+                                    <span class="fw-bold text-dark">@result.TaChance%</span>
                                 </div>
-                                <hr class="text-light-subtle mt-4 mb-3" />
 
-                                <form asp-controller="Shortlist" asp-action="Add" method="post" class="d-grid mt-2">
-                                    <input type="hidden" name="programId" value="@result.Program?.Id" />
-                                    <button type="submit" class="btn btn-outline-primary fw-bold rounded-3 py-2">
-                                        <i class="bi bi-bookmark-plus"></i> Save to Shortlist
-                                    </button>
-                                </form>
-
+                                @if (result.IsResearchTrack)
+                                {
+                                    <div class="col-6">
+                                        <span class="text-muted small d-block">Research Fit</span>
+                                        <div class="progress mt-1" style="height: 6px;">
+                                            <div class="progress-bar bg-success" style="width: @result.BudgetFit%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted small d-block"><i class="bi bi-cash-stack"></i> Est. RA Chance</span>
+                                        <span class="fw-bold text-dark">@result.RaChance%</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-12 mt-3">
+                                        <div class="p-2 bg-light rounded border border-light-subtle">
+                                            <span class="text-muted small d-block"><i class="bi bi-journal-bookmark-fill"></i> Track Preference</span>
+                                            <span class="fw-bold text-dark">Professional / Coursework Degree (Research Algorithms Bypassed)</span>
+                                        </div>
+                                    </div>
+                                }
                             </div>
+
+                            <form asp-controller="Shortlist" asp-action="Add" method="post" class="d-grid mt-auto">
+                                <input type="hidden" name="programId" value="@result.Program?.Id" />
+                                <button type="submit" class="btn btn-outline-dark fw-bold rounded-pill py-2 border-2 hover-shadow">
+                                    <i class="bi bi-bookmark-plus-fill text-primary"></i> Save to My Shortlist
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -108,61 +118,3 @@
         </div>
     }
 </div>
-
-@section Scripts {
-    @if (Model.Any())
-    {
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        
-        <script>
-            const universities = @Html.Raw(Json.Serialize(Model.Select(m => m.University?.Name)));
-            const overallScores = @Html.Raw(Json.Serialize(Model.Select(m => m.OverallScore)));
-            const admissionChances = @Html.Raw(Json.Serialize(Model.Select(m => m.AdmissionChance)));
-            const budgetFits = @Html.Raw(Json.Serialize(Model.Select(m => m.BudgetFit)));
-
-            const ctx = document.getElementById('recommendationChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: universities,
-                    datasets: [
-                        {
-                            label: 'Overall Match (%)',
-                            data: overallScores,
-                            backgroundColor: '#6f42c1', 
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Admission Chance (%)',
-                            data: admissionChances,
-                            backgroundColor: '#198754', 
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Budget Fit (%)',
-                            data: budgetFits,
-                            backgroundColor: '#0dcaf0', 
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top' },
-                        tooltip: { mode: 'index', intersect: false }
-                    },
-                    scales: {
-                        x: { grid: { display: false } },
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            title: { display: true, text: 'Percentage (%)' }
-                        }
-                    }
-                }
-            });
-        </script>
-    }
-}

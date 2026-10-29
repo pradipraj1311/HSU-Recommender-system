@@ -1,98 +1,82 @@
 @model HSU_Recommender_system.Models.StudentProfile
 
 @{
-    ViewData["Title"] = "Find University";
+    ViewData["Title"] = "Find Your Best University";
 }
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold" style="color: #6f42c1;"><i class="bi bi-search"></i>Find your University</h2>
+    </div>
+
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header text-white" style="background-color: #6f42c1;">
-                    <h5 class="mb-0">Find University</h5>
-                </div>
-                <div class="card-body bg-light">
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            @TempData["SuccessMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="col-lg-10">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body bg-white p-5">
+                    <form asp-action="Manage" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="UserId" />
+
+                        <h5 class="text-muted border-bottom pb-2 mb-4">1.Academic Details</h5>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <label asp-for="CGPA" class="form-label fw-bold">CGPA (Out of 10) <span class="text-danger">*</span></label>
+                                <input asp-for="CGPA" class="form-control form-control-lg bg-light" type="number" step="0.01" placeholder="e.g. 8.5" required />
+                                <span asp-validation-for="CGPA" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="EnglishProficiencyScore" class="form-label fw-bold">IELTS Band <span class="text-danger">*</span></label>
+                                <input asp-for="EnglishProficiencyScore" class="form-control form-control-lg bg-light" type="number" step="0.5" placeholder="e.g. 7.5" required />
+                                <span asp-validation-for="EnglishProficiencyScore" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="GREQuantScore" class="form-label fw-bold">GRE Quant Score <span class="text-danger">*</span></label>
+                                <input asp-for="GREQuantScore" class="form-control form-control-lg bg-light" type="number" placeholder="e.g. 165" required />
+                                <span asp-validation-for="GREQuantScore" class="text-danger"></span>
+                            </div>
                         </div>
-                    }
 
-                   
-                        <form asp-action="Manage" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-    
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="UserId" />
-
-                        <div class="row g-3">
-                            <div class="col-md-4 mb-3">
-    <label asp-for="CGPA" class="form-label fw-bold">CGPA (Out of 10)</label>
-    <input asp-for="CGPA" class="form-control" type="number" step="0.01" placeholder="e.g. 8.5" />
-    <span asp-validation-for="CGPA" class="text-danger"></span>
-</div>
-<div class="col-md-4 mb-3">
-    <label asp-for="EnglishProficiencyScore" class="form-label fw-bold">IELTS</label>
-    <input asp-for="EnglishProficiencyScore" class="form-control" type="number" step="0.5" placeholder="e.g. 7.5" />
-    <span asp-validation-for="EnglishProficiencyScore" class="text-danger"></span>
-</div>
-<div class="col-md-4 mb-3">
-    <label asp-for="GREQuantScore" class="form-label fw-bold text-primary">GRE Quant (130-170)</label>
-    <input asp-for="GREQuantScore" class="form-control border-primary" type="number" placeholder="e.g. 165" />
-    <span asp-validation-for="GREQuantScore" class="text-danger"></span>
-</div>
-
-                            <div class="col-md-12 mb-3">
-                                <label asp-for="ResearchInterests" class="form-label fw-bold text-primary">Research Interests</label>
-                                <input asp-for="ResearchInterests" class="form-control border-primary" placeholder="e.g. Artificial Intelligence, Machine Learning, Data Science" />
+                        <h5 class="text-muted border-bottom pb-2 mb-4 mt-5">2. Research & Experience</h5>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="ResearchInterests" class="form-label fw-bold">Research Focus <span class="text-danger">*</span></label>
+                                <select asp-for="ResearchInterests" class="form-select form-select-lg bg-light" asp-items="ViewBag.ResearchKeywords" required>
+                                    <option value="">Select Your Field of Interest</option>
+                                    <option value="None" class="fw-bold text-primary">Not Interested</option>
+                                </select>
                                 <span asp-validation-for="ResearchInterests" class="text-danger"></span>
                             </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="NumberOfProjects" class="form-label fw-bold"></label>
-                                <input asp-for="NumberOfProjects" class="form-control" />
-                                <span asp-validation-for="NumberOfProjects" class="text-danger"></span>
+                            <div class="col-md-3">
+                                <label asp-for="NumberOfResearchPapers" class="form-label fw-bold">Publications</label>
+                                <input asp-for="NumberOfResearchPapers" class="form-control form-control-lg bg-light" type="number" placeholder="0" />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="NumberOfResearchPapers" class="form-label fw-bold"></label>
-                                <input asp-for="NumberOfResearchPapers" class="form-control" />
-                                <span asp-validation-for="NumberOfResearchPapers" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="MaximumBudget" class="form-label fw-bold"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input asp-for="MaximumBudget" class="form-control" type="number" placeholder="e.g. 45000" />
-                                </div>
-                                <span asp-validation-for="MaximumBudget" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="WorkExperienceMonths" class="form-label fw-bold"></label>
-                                <input asp-for="WorkExperienceMonths" class="form-control" placeholder="e.g. 6" />
-                                <span asp-validation-for="WorkExperienceMonths" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="TargetDegree" class="form-label fw-bold"></label>
-                                <select asp-for="TargetDegree" class="form-select" asp-items="ViewBag.Degrees">
-                                    <option value="">-- Select Target Degree --</option>
-                                </select>
-                                <span asp-validation-for="TargetDegree" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="PreferredCountry" class="form-label fw-bold"></label>
-                                <select asp-for="PreferredCountry" class="form-select" asp-items="ViewBag.Countries">
-                                    <option value="">-- Select Country --</option>
-                                </select>
-                                <span asp-validation-for="PreferredCountry" class="text-danger"></span>
+                            <div class="col-md-3">
+                                <label asp-for="WorkExperienceMonths" class="form-label fw-bold">Work Exp (Months)</label>
+                                <input asp-for="WorkExperienceMonths" class="form-control form-control-lg bg-light" type="number" placeholder="0" />
                             </div>
                         </div>
 
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn text-white fw-bold py-2" style="background-color: #6f42c1;">Save Profile Parameters</button>
+                        <h5 class="text-muted border-bottom pb-2 mb-4 mt-5">3. Target Destination</h5>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="TargetDegree" class="form-label fw-bold">Target Degree <span class="text-danger">*</span></label>
+                                <select asp-for="TargetDegree" class="form-select form-select-lg bg-light" asp-items="ViewBag.Degrees" required>
+                                    <option value="">-- Any Degree --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="PreferredCountry" class="form-label fw-bold">Preferred Country <span class="text-danger">*</span></label>
+                                <select asp-for="PreferredCountry" class="form-select form-select-lg bg-light" asp-items="ViewBag.Countries" required>
+                                    <option value="">-- Any Country --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-lg text-white fw-bold py-3 rounded-pill shadow-sm" style="background-color: #6f42c1;">
+                                <i class="bi bi-magic me-2"></i> Find My Matching Universities
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -102,5 +86,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

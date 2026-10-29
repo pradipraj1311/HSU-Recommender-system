@@ -46,8 +46,7 @@ namespace HSU_Recommender_system.Models
         [Display(Name = "OpenAlex Concept ID / Institution ID")]
         public string? OpenAlexInstitutionId { get; set; }
 
-     
-
+    
 
         public ICollection<AdmissionDeadline>? Deadlines { get; set; }
     }
